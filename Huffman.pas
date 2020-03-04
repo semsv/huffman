@@ -1,9 +1,9 @@
 unit Huffman;
 {--------------------------------------------------
-Автор компонента реализующего алгоритм Хаффмена*:
-Севастьянов Семен Владимирович
-*Алгоритм Huffman's модифицирован автором компонента.
-*Базовая идея алгоритма не изменена.
+РђРІС‚РѕСЂ РєРѕРјРїРѕРЅРµРЅС‚Р° СЂРµР°Р»РёР·СѓСЋС‰РµРіРѕ Р°Р»РіРѕСЂРёС‚Рј РҐР°С„С„РјРµРЅР°*:
+РЎРµРІР°СЃС‚СЊСЏРЅРѕРІ РЎРµРјРµРЅ Р’Р»Р°РґРёРјРёСЂРѕРІРёС‡
+*РђР»РіРѕСЂРёС‚Рј Huffman's РјРѕРґРёС„РёС†РёСЂРѕРІР°РЅ Р°РІС‚РѕСЂРѕРј РєРѕРјРїРѕРЅРµРЅС‚Р°.
+*Р‘Р°Р·РѕРІР°СЏ РёРґРµСЏ Р°Р»РіРѕСЂРёС‚РјР° РЅРµ РёР·РјРµРЅРµРЅР°.
 --------------------------------------------------}
             
 interface
@@ -13,10 +13,10 @@ uses
 
 Type
 
-  {--- для локальных событий --------------------------------------------}
+  {--- РґР»СЏ Р»РѕРєР°Р»СЊРЅС‹С… СЃРѕР±С‹С‚РёР№ --------------------------------------------}
   TEventOnReadInBuffer = Procedure (FirstRunRead:Boolean; Buffer : TBuffer; LastPart:Boolean) of Object;
   TEventOnBeforeReadInBuffer = Procedure (FirstRunRead:Boolean) of Object;
-  {--- для глобальных событий -------------------------------------------}
+  {--- РґР»СЏ РіР»РѕР±Р°Р»СЊРЅС‹С… СЃРѕР±С‹С‚РёР№ -------------------------------------------}
   TEventOnAfterUnPack = Procedure of Object;
   TEventOnAfterCreatePrefics = Procedure (PreficsCode:TPreficsCode) of Object;
   TEventOnAfterLoadPrefics = Procedure (PreficsCode:TPreficsCode) of Object;
@@ -32,7 +32,7 @@ Type
   THuffman = class(TComponent)
   private
     { Private declarations }
-   FOnReadInBuffer : TEventOnReadInBuffer; // Событие возникающее при чтении из файла в буффер
+   FOnReadInBuffer : TEventOnReadInBuffer; // РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°СЋС‰РµРµ РїСЂРё С‡С‚РµРЅРёРё РёР· С„Р°Р№Р»Р° РІ Р±СѓС„С„РµСЂ
    FOnBeforeReadInBuffer : TEventOnBeforeReadInBuffer;
    FOnAfterUnPack : TEventOnAfterUnPack;
    FOnAfterLoadPrefics : TEventOnAfterLoadPrefics;
@@ -45,28 +45,28 @@ Type
    FOnAfterLoadHeader : TEventOnAfterLoadHeader;
    FOnAfterPack : TEventOnAfterPack;
 
-   FRest            : String; // Остаток - используется при распаковке
-   f_rest_bits      : String; // Остаток - используется при быстрой распаковке (быстрая обработка без использования преобразования буффера в строковой массив бит)
+   FRest            : String; // РћСЃС‚Р°С‚РѕРє - РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё СЂР°СЃРїР°РєРѕРІРєРµ
+   f_rest_bits      : String; // РћСЃС‚Р°С‚РѕРє - РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё Р±С‹СЃС‚СЂРѕР№ СЂР°СЃРїР°РєРѕРІРєРµ (Р±С‹СЃС‚СЂР°СЏ РѕР±СЂР°Р±РѕС‚РєР° Р±РµР· РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ Р±СѓС„С„РµСЂР° РІ СЃС‚СЂРѕРєРѕРІРѕР№ РјР°СЃСЃРёРІ Р±РёС‚)
    FLNFLB           : Byte;   // Length Not Full Last Byte / Special Mask
-   FSeekFLNFLB      : Byte;   // Смещение в файле
+   FSeekFLNFLB      : Byte;   // РЎРјРµС‰РµРЅРёРµ РІ С„Р°Р№Р»Рµ
    FMASKBITS        : Byte;
-   {-- Переменные необх. для сжатия файла -----}
+   {-- РџРµСЂРµРјРµРЅРЅС‹Рµ РЅРµРѕР±С…. РґР»СЏ СЃР¶Р°С‚РёСЏ С„Р°Р№Р»Р° -----}
    FFileHandle      : Cardinal;
    FFileSize        : Cardinal;
    FFileSizeHigh    : Cardinal;
    FFileOpen        : Boolean;
    FPPB             : TPackPreficsBuffer;
    FCodeTable       : TCodeTable;
-   FPreficsCode     : TPreficsCode; // * также используется при дезархивации
-   FWinHandle       : HWND;         // дескриптор окна windows для вывода информации об ошибках
+   FPreficsCode     : TPreficsCode; // * С‚Р°РєР¶Рµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РґРµР·Р°СЂС…РёРІР°С†РёРё
+   FWinHandle       : HWND;         // РґРµСЃРєСЂРёРїС‚РѕСЂ РѕРєРЅР° windows РґР»СЏ РІС‹РІРѕРґР° РёРЅС„РѕСЂРјР°С†РёРё РѕР± РѕС€РёР±РєР°С…
    FUnPackFileName  : String;
    {-------------------------------------------}
    FSFileName       : String;  // Source File Name
-   FPackHeaderSize  : Integer; // для внутреннего хранения в свойстве - PackHeaderSize
-   FConnectAPLCount : Boolean; // Определяет способ хранения CountA1 , CountA2 в заголовке архива
-   FTwoBCountP      : Boolean; // Лог. - Счетчик для префиксных кодов занимает 1 байт ?  Или 2 байта? (True = 2 , False = 1)
-   FExecuteError    : Boolean; // Сигнализирует возникновение ошибки
-   FFirstFlushPPB   : Boolean; // если истина то упакованный буфер сохраняется в первый раз
+   FPackHeaderSize  : Integer; // РґР»СЏ РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ С…СЂР°РЅРµРЅРёСЏ РІ СЃРІРѕР№СЃС‚РІРµ - PackHeaderSize
+   FConnectAPLCount : Boolean; // РћРїСЂРµРґРµР»СЏРµС‚ СЃРїРѕСЃРѕР± С…СЂР°РЅРµРЅРёСЏ CountA1 , CountA2 РІ Р·Р°РіРѕР»РѕРІРєРµ Р°СЂС…РёРІР°
+   FTwoBCountP      : Boolean; // Р›РѕРі. - РЎС‡РµС‚С‡РёРє РґР»СЏ РїСЂРµС„РёРєСЃРЅС‹С… РєРѕРґРѕРІ Р·Р°РЅРёРјР°РµС‚ 1 Р±Р°Р№С‚ ?  РР»Рё 2 Р±Р°Р№С‚Р°? (True = 2 , False = 1)
+   FExecuteError    : Boolean; // РЎРёРіРЅР°Р»РёР·РёСЂСѓРµС‚ РІРѕР·РЅРёРєРЅРѕРІРµРЅРёРµ РѕС€РёР±РєРё
+   FFirstFlushPPB   : Boolean; // РµСЃР»Рё РёСЃС‚РёРЅР° С‚Рѕ СѓРїР°РєРѕРІР°РЅРЅС‹Р№ Р±СѓС„РµСЂ СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ РІ РїРµСЂРІС‹Р№ СЂР°Р·
    FCurrentFilePos  : Integer;
    FSecurityKeyLen  : Integer;
 
@@ -95,7 +95,7 @@ Type
 
    Procedure CreateTree(CodeTable:TCodeTable; Var TreeTable:TTreeTable);
    Function GetAllusionsToItIndex(TreeTable:TTreeTable;
-     Var CheckAItm:TCheckAItm):Boolean;  // Взять ссылки для элемента с индексом
+     Var CheckAItm:TCheckAItm):Boolean;  // Р’Р·СЏС‚СЊ СЃСЃС‹Р»РєРё РґР»СЏ СЌР»РµРјРµРЅС‚Р° СЃ РёРЅРґРµРєСЃРѕРј
    Function GetCourseToIndex(Index:Integer;TreeTable:TTreeTable;
           CheckAItm:TCheckAItm):String;
    Procedure SortedRow(Row:Integer;Var TreeTable:TTreeTable);
@@ -172,80 +172,80 @@ begin
 end;
 
 Procedure THuffman.CreatePreficsCode(CodeTable:TCodeTable; Var PreficsCode:TPreficsCode);
-// Процедура создание префиксного кода
+// РџСЂРѕС†РµРґСѓСЂР° СЃРѕР·РґР°РЅРёРµ РїСЂРµС„РёРєСЃРЅРѕРіРѕ РєРѕРґР°
 Var
  TreeTable:TTreeTable;
  CheckAItm:TCheckAItm;
 begin
- CreateTree(CodeTable,TreeTable); // Создание дерева Huffman's
- GetAllusionsToItIndex(TreeTable, CheckAItm); // Берем ссылки для всех элементов дерева
- GetPreficsCode(TreeTable,CheckAItm,PreficsCode); // Получить префиксные коды
- FreeTreeTable(TreeTable); // Освобождаем память
- FreeCheckAItm(CheckAItm); // Освобождаем память
- SortPreficsCodeToLength(PreficsCode); // Сортировка префиксного кода по длинне
- If TestPreficsCode(PreficsCode) then // Проверка кода на факт его префиксности
+ CreateTree(CodeTable,TreeTable); // РЎРѕР·РґР°РЅРёРµ РґРµСЂРµРІР° Huffman's
+ GetAllusionsToItIndex(TreeTable, CheckAItm); // Р‘РµСЂРµРј СЃСЃС‹Р»РєРё РґР»СЏ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РґРµСЂРµРІР°
+ GetPreficsCode(TreeTable,CheckAItm,PreficsCode); // РџРѕР»СѓС‡РёС‚СЊ РїСЂРµС„РёРєСЃРЅС‹Рµ РєРѕРґС‹
+ FreeTreeTable(TreeTable); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+ FreeCheckAItm(CheckAItm); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+ SortPreficsCodeToLength(PreficsCode); // РЎРѕСЂС‚РёСЂРѕРІРєР° РїСЂРµС„РёРєСЃРЅРѕРіРѕ РєРѕРґР° РїРѕ РґР»РёРЅРЅРµ
+ If TestPreficsCode(PreficsCode) then // РџСЂРѕРІРµСЂРєР° РєРѕРґР° РЅР° С„Р°РєС‚ РµРіРѕ РїСЂРµС„РёРєСЃРЅРѕСЃС‚Рё
   begin
    If Assigned(FOnAfterCreatePrefics) then FOnAfterCreatePrefics(FPreficsCode);
-    FileReadInBuffer(false, false, 0); // Начинаем чтение файла (false = второй прогон) для архивации
+    FileReadInBuffer(false, false, 0); // РќР°С‡РёРЅР°РµРј С‡С‚РµРЅРёРµ С„Р°Р№Р»Р° (false = РІС‚РѕСЂРѕР№ РїСЂРѕРіРѕРЅ) РґР»СЏ Р°СЂС…РёРІР°С†РёРё
   end;
 end;
 
-{--- Подпрограммы обработки событий  ---------------------------------}
+{--- РџРѕРґРїСЂРѕРіСЂР°РјРјС‹ РѕР±СЂР°Р±РѕС‚РєРё СЃРѕР±С‹С‚РёР№  ---------------------------------}
 procedure THuffman.PEventReadInBuffer(FirstRunRead: Boolean;
   Buffer: TBuffer; LastPart: Boolean);
-// Событие возникает при чтение в буфер блока данных из файла
-// Считанный блок данных помешается в переменную Buffer которая подается на
-// вход в данную процедуру обработки события.
+// РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё С‡С‚РµРЅРёРµ РІ Р±СѓС„РµСЂ Р±Р»РѕРєР° РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р°
+// РЎС‡РёС‚Р°РЅРЅС‹Р№ Р±Р»РѕРє РґР°РЅРЅС‹С… РїРѕРјРµС€Р°РµС‚СЃСЏ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ Buffer РєРѕС‚РѕСЂР°СЏ РїРѕРґР°РµС‚СЃСЏ РЅР°
+// РІС…РѕРґ РІ РґР°РЅРЅСѓСЋ РїСЂРѕС†РµРґСѓСЂСѓ РѕР±СЂР°Р±РѕС‚РєРё СЃРѕР±С‹С‚РёСЏ.
 Var
   PB          : String;
 begin
-If FirstRunRead then // Первый прогон (Создание дерева Huffman's)
+If FirstRunRead then // РџРµСЂРІС‹Р№ РїСЂРѕРіРѕРЅ (РЎРѕР·РґР°РЅРёРµ РґРµСЂРµРІР° Huffman's)
  begin
-  InitTable(Buffer, FCodeTable); // Инициализация кодовой таблицы
- If Assigned(FOnInitCodeTable) then FOnInitCodeTable(Buffer.BufSize); // вызов события
-  If LastPart then             // читается последний блок файла
+  InitTable(Buffer, FCodeTable); // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєРѕРґРѕРІРѕР№ С‚Р°Р±Р»РёС†С‹
+ If Assigned(FOnInitCodeTable) then FOnInitCodeTable(Buffer.BufSize); // РІС‹Р·РѕРІ СЃРѕР±С‹С‚РёСЏ
+  If LastPart then             // С‡РёС‚Р°РµС‚СЃСЏ РїРѕСЃР»РµРґРЅРёР№ Р±Р»РѕРє С„Р°Р№Р»Р°
    begin
-   FreePreficsCode(FPreficsCode); // Освобождаем память глобальных
-   FreePackPreficsBuffer(FPPB);   // переменных относительно данного модуля
-   {--- создаем префиксный код -----------------}
+   FreePreficsCode(FPreficsCode); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ РіР»РѕР±Р°Р»СЊРЅС‹С…
+   FreePackPreficsBuffer(FPPB);   // РїРµСЂРµРјРµРЅРЅС‹С… РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РґР°РЅРЅРѕРіРѕ РјРѕРґСѓР»СЏ
+   {--- СЃРѕР·РґР°РµРј РїСЂРµС„РёРєСЃРЅС‹Р№ РєРѕРґ -----------------}
    CreatePreficsCode(FCodeTable , FPreficsCode);
-    // Процедура так же запускает второй прогон
+    // РџСЂРѕС†РµРґСѓСЂР° С‚Р°Рє Р¶Рµ Р·Р°РїСѓСЃРєР°РµС‚ РІС‚РѕСЂРѕР№ РїСЂРѕРіРѕРЅ
    {-------------------------------------------}
    end;
  end
   else
- Begin // Второй прогон (архивирование)
-  PackBuffer(Buffer,FPreficsCode,PB); // Упаковка буффера в строку байт
+ Begin // Р’С‚РѕСЂРѕР№ РїСЂРѕРіРѕРЅ (Р°СЂС…РёРІРёСЂРѕРІР°РЅРёРµ)
+  PackBuffer(Buffer,FPreficsCode,PB); // РЈРїР°РєРѕРІРєР° Р±СѓС„С„РµСЂР° РІ СЃС‚СЂРѕРєСѓ Р±Р°Р№С‚
   PackPreficsBuffer(PB,FPPB);
 
   If Assigned(FOnBeforePackBlock) then
    begin
     If not LastPart then
-     FOnBeforePackBlock(Buffer.BufSize, FPPB.CountFullByte) else // Вызов события перед упаковкой блока
-     FOnBeforePackBlock(Buffer.BufSize, FPPB.Count); // Вызов события перед упаковкой блока
+     FOnBeforePackBlock(Buffer.BufSize, FPPB.CountFullByte) else // Р’С‹Р·РѕРІ СЃРѕР±С‹С‚РёСЏ РїРµСЂРµРґ СѓРїР°РєРѕРІРєРѕР№ Р±Р»РѕРєР°
+     FOnBeforePackBlock(Buffer.BufSize, FPPB.Count); // Р’С‹Р·РѕРІ СЃРѕР±С‹С‚РёСЏ РїРµСЂРµРґ СѓРїР°РєРѕРІРєРѕР№ Р±Р»РѕРєР°
    end;
    
   FlushPPBToFile(FPPB, FSFileName, LastPart);
-  FFirstFlushPPB:=false; // Первый упакованный блок данных сохранен
+  FFirstFlushPPB:=false; // РџРµСЂРІС‹Р№ СѓРїР°РєРѕРІР°РЅРЅС‹Р№ Р±Р»РѕРє РґР°РЅРЅС‹С… СЃРѕС…СЂР°РЅРµРЅ
 
-  If LastPart then // читается последний блок файла
+  If LastPart then // С‡РёС‚Р°РµС‚СЃСЏ РїРѕСЃР»РµРґРЅРёР№ Р±Р»РѕРє С„Р°Р№Р»Р°
    Begin
-    FreePackPreficsBuffer(FPPB);    // Освобождаем память
-    FreeCodeTable(FCodeTable);      // Освобождаем память
-    FreePreficsCode(FPreficsCode);  // Освобождаем память
+    FreePackPreficsBuffer(FPPB);    // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+    FreeCodeTable(FCodeTable);      // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+    FreePreficsCode(FPreficsCode);  // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
    end;
  end;
 end;
 
 procedure THuffman.PEventBeforeReadInBuffer(FirstRunRead: Boolean);
-// Процедура возникает перед чтением блока данных из файла.
+// РџСЂРѕС†РµРґСѓСЂР° РІРѕР·РЅРёРєР°РµС‚ РїРµСЂРµРґ С‡С‚РµРЅРёРµРј Р±Р»РѕРєР° РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р°.
  Var
   Header      : THeader;
 begin
- If FirstRunRead then FreeCodeTable(FCodeTable); // Освобождаем память
- If not FirstRunRead then // Второй прогон ( перед архивированием )
+ If FirstRunRead then FreeCodeTable(FCodeTable); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+ If not FirstRunRead then // Р’С‚РѕСЂРѕР№ РїСЂРѕРіРѕРЅ ( РїРµСЂРµРґ Р°СЂС…РёРІРёСЂРѕРІР°РЅРёРµРј )
   begin
-  {--- Создаем заголовок архива ------------------}
+  {--- РЎРѕР·РґР°РµРј Р·Р°РіРѕР»РѕРІРѕРє Р°СЂС…РёРІР° ------------------}
     CreatePackHeader(FPreficsCode, Header);
     SavePackHeader(Header, FSFileName);
     FreePackHeader(Header);
@@ -261,18 +261,18 @@ begin
  FFileHandle := FileOpen(FileName, fmOpenReadWrite or fmShareDenyWrite);
  If (FFileHandle = 0) or (FFileHandle = INVALID_HANDLE_VALUE) Then
   begin
-   ProcessError(-1, 'Ошибка доступа к файлу: ' + 'OpenFileToPack', true);
-   Exit; // Обнаружены ошибки ввода - вывода
+   ProcessError(-1, 'РћС€РёР±РєР° РґРѕСЃС‚СѓРїР° Рє С„Р°Р№Р»Сѓ: ' + 'OpenFileToPack', true);
+   Exit; // РћР±РЅР°СЂСѓР¶РµРЅС‹ РѕС€РёР±РєРё РІРІРѕРґР° - РІС‹РІРѕРґР°
   end;
 
- FFileSize := windows.GetFileSize(FFileHandle, @FFileSizeHigh); // Записываем размер файла в Байтах
+ FFileSize := windows.GetFileSize(FFileHandle, @FFileSizeHigh); // Р—Р°РїРёСЃС‹РІР°РµРј СЂР°Р·РјРµСЂ С„Р°Р№Р»Р° РІ Р‘Р°Р№С‚Р°С…
  Error     := 0;
  if FFileSize = 0 then Error     := -1;
  If Error <> 0 then
   begin
    FExecuteError := true;
-   ProcessError(Error, ' Ошибка при работе, ф. - FileSize', true);
-   Exit; // Обнаружены ошибки ввода - вывода
+   ProcessError(Error, ' РћС€РёР±РєР° РїСЂРё СЂР°Р±РѕС‚Рµ, С„. - FileSize', true);
+   Exit; // РћР±РЅР°СЂСѓР¶РµРЅС‹ РѕС€РёР±РєРё РІРІРѕРґР° - РІС‹РІРѕРґР°
   end;
 
  If Assigned(FOnOpenSourceFile) then FOnOpenSourceFile;
@@ -290,31 +290,31 @@ begin
 
  FSFileName := FileName;
  FSFileName := DeleteFileExt(FSFileName);
- FSFileName := FSFileName + '.srj'; // Имя файла для архивации
+ FSFileName := FSFileName + '.srj'; // РРјСЏ С„Р°Р№Р»Р° РґР»СЏ Р°СЂС…РёРІР°С†РёРё
  IF lowercase(FileName) = lowercase(FSFileName) then
     Begin
-     ErrorStr := 'Имя входного и выходного файла совпадают !!!';
+     ErrorStr := 'РРјСЏ РІС…РѕРґРЅРѕРіРѕ Рё РІС‹С…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р° СЃРѕРІРїР°РґР°СЋС‚ !!!';
      ProcessError(0, ErrorStr, false);
-     MessageBox(FWinHandle, PChar(ErrorStr), 'Ошибка', MB_ICONERROR);
+     MessageBox(FWinHandle, PChar(ErrorStr), 'РћС€РёР±РєР°', MB_ICONERROR);
      Exit;
     end;
 
  DF := True;
  If FileExists(FSFileName) then
-  DF := DeleteFile(FSFileName);      // Удаление существующего арх. файла
+  DF := DeleteFile(FSFileName);      // РЈРґР°Р»РµРЅРёРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРіРѕ Р°СЂС…. С„Р°Р№Р»Р°
  If Not DF then
   begin
-   ErrorStr      := 'Не удалось удалить арх. файл !!!';
+   ErrorStr      := 'РќРµ СѓРґР°Р»РѕСЃСЊ СѓРґР°Р»РёС‚СЊ Р°СЂС…. С„Р°Р№Р» !!!';
    ProcessError(0, ErrorStr, false);
-   MessageBox(FWinHandle, PChar(ErrorStr), 'Ошибка', MB_ICONERROR);
+   MessageBox(FWinHandle, PChar(ErrorStr), 'РћС€РёР±РєР°', MB_ICONERROR);
    Exit;
   end;
 
  OpenFileToPack(FileName);
- if FExecuteError then Exit;       // Возникновение ошибочной ситуации
+ if FExecuteError then Exit;       // Р’РѕР·РЅРёРєРЅРѕРІРµРЅРёРµ РѕС€РёР±РѕС‡РЅРѕР№ СЃРёС‚СѓР°С†РёРё
 
- FileReadInBuffer(True, false, 0); // Начинаем чтение файла (True = первый прогон )
- if FExecuteError then Exit;       // Возникновение ошибочной ситуации
+ FileReadInBuffer(True, false, 0); // РќР°С‡РёРЅР°РµРј С‡С‚РµРЅРёРµ С„Р°Р№Р»Р° (True = РїРµСЂРІС‹Р№ РїСЂРѕРіРѕРЅ )
+ if FExecuteError then Exit;       // Р’РѕР·РЅРёРєРЅРѕРІРµРЅРёРµ РѕС€РёР±РѕС‡РЅРѕР№ СЃРёС‚СѓР°С†РёРё
 
 
  If Assigned(FOnAfterPack) then FOnAfterPack;
@@ -329,10 +329,10 @@ end;
 
 Procedure THuffman.FileReadInBuffer(FirstRunRead : Boolean; UnPack : Boolean; FileSeek : Int64);
 {**********************************************************************}
-// Процедура производит циклическое считывание блоков данных из файла
-// и вызывает два события :
-// OnBeforeReadInBuffer - Перед чтением в буффер   (переменная Buffer)
-// OnReadInBuffer       - Во время чтения в буффер (переменная Buffer)
+// РџСЂРѕС†РµРґСѓСЂР° РїСЂРѕРёР·РІРѕРґРёС‚ С†РёРєР»РёС‡РµСЃРєРѕРµ СЃС‡РёС‚С‹РІР°РЅРёРµ Р±Р»РѕРєРѕРІ РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р°
+// Рё РІС‹Р·С‹РІР°РµС‚ РґРІР° СЃРѕР±С‹С‚РёСЏ :
+// OnBeforeReadInBuffer - РџРµСЂРµРґ С‡С‚РµРЅРёРµРј РІ Р±СѓС„С„РµСЂ   (РїРµСЂРµРјРµРЅРЅР°СЏ Buffer)
+// OnReadInBuffer       - Р’Рѕ РІСЂРµРјСЏ С‡С‚РµРЅРёСЏ РІ Р±СѓС„С„РµСЂ (РїРµСЂРµРјРµРЅРЅР°СЏ Buffer)
 {**********************************************************************}
  Var
   Buffer   : TBuffer;
@@ -347,7 +347,7 @@ begin
 
  If not UnPack then
  If Assigned(FOnBeforeReadInBuffer) then
- FOnBeforeReadInBuffer(FirstRunRead); // Вызываем событие перед чтением в буффер
+ FOnBeforeReadInBuffer(FirstRunRead); // Р’С‹Р·С‹РІР°РµРј СЃРѕР±С‹С‚РёРµ РїРµСЂРµРґ С‡С‚РµРЅРёРµРј РІ Р±СѓС„С„РµСЂ
 
 {------------------------------------}
 If UnPack then
@@ -359,10 +359,10 @@ EReadB:=0;
 
 FFirstFlushPPB:=True;
 
-If FFileSize-FileSeek <= ReadB then // файл можно полностью прочитать в буффер
+If FFileSize-FileSeek <= ReadB then // С„Р°Р№Р» РјРѕР¶РЅРѕ РїРѕР»РЅРѕСЃС‚СЊСЋ РїСЂРѕС‡РёС‚Р°С‚СЊ РІ Р±СѓС„С„РµСЂ
  begin
   SysUtils.FileRead(FFileHandle, Buffer.Buf, FFileSize- FileSeek );
-  Buffer.BufSize:=FFileSize - FileSeek; // Размер буфера = размеру файла
+  Buffer.BufSize:=FFileSize - FileSeek; // Р Р°Р·РјРµСЂ Р±СѓС„РµСЂР° = СЂР°Р·РјРµСЂСѓ С„Р°Р№Р»Р°
   LastPart:=true;
 
   If not UnPack then
@@ -371,11 +371,11 @@ If FFileSize-FileSeek <= ReadB then // файл можно полностью прочитать в буффер
   If UnPack then UnPackBlock(Buffer,LastPart,FPreficsCode,FUnPackFileName);
  end else
  begin
-  While FFileSize-FileSeek > EReadB+ReadB do // Размер ф. больше колич. проч.
-   begin                            // в буффер байт + размер буффера
+  While FFileSize-FileSeek > EReadB+ReadB do // Р Р°Р·РјРµСЂ С„. Р±РѕР»СЊС€Рµ РєРѕР»РёС‡. РїСЂРѕС‡.
+   begin                            // РІ Р±СѓС„С„РµСЂ Р±Р°Р№С‚ + СЂР°Р·РјРµСЂ Р±СѓС„С„РµСЂР°
     SysUtils.FileRead(FFileHandle, Buffer.Buf, ReadB);
     Buffer.BufSize := ReadB;
-    EReadB         := EReadB + Buffer.BufSize; // Накапливаем кол-во прочитанных байт
+    EReadB         := EReadB + Buffer.BufSize; // РќР°РєР°РїР»РёРІР°РµРј РєРѕР»-РІРѕ РїСЂРѕС‡РёС‚Р°РЅРЅС‹С… Р±Р°Р№С‚
     If FFileSize-FileSeek <> EREadB then LastPart:=false
      else LastPart:=True;
 
@@ -388,9 +388,9 @@ If FFileSize-FileSeek <= ReadB then // файл можно полностью прочитать в буффер
    end;
   If FFileSize - FileSeek <= EReadB+ReadB then
    begin
-   // Вычисляем остаток = (Кол-во прочитанных Б. + Кол-во читаемых в буффер Б) - Размер ф.
+   // Р’С‹С‡РёСЃР»СЏРµРј РѕСЃС‚Р°С‚РѕРє = (РљРѕР»-РІРѕ РїСЂРѕС‡РёС‚Р°РЅРЅС‹С… Р‘. + РљРѕР»-РІРѕ С‡РёС‚Р°РµРјС‹С… РІ Р±СѓС„С„РµСЂ Р‘) - Р Р°Р·РјРµСЂ С„.
    Ostatok:= (EReadB+ReadB) - (FFileSize - FileSeek);
-   // Кол-во читаемых в буффер Б. - Кол-во "лишних" байт (Ostatok)
+   // РљРѕР»-РІРѕ С‡РёС‚Р°РµРјС‹С… РІ Р±СѓС„С„РµСЂ Р‘. - РљРѕР»-РІРѕ "Р»РёС€РЅРёС…" Р±Р°Р№С‚ (Ostatok)
    ReadB:= ReadB - Ostatok;
    Buffer.BufSize:=ReadB;
    SysUtils.FileRead(FFileHandle, Buffer.Buf, ReadB);
@@ -432,7 +432,7 @@ begin
 PB:='';
  For i:=1 to Buffer.BufSize do
   begin
-   // Получение префиксного кода для элемента буффера
+   // РџРѕР»СѓС‡РµРЅРёРµ РїСЂРµС„РёРєСЃРЅРѕРіРѕ РєРѕРґР° РґР»СЏ СЌР»РµРјРµРЅС‚Р° Р±СѓС„С„РµСЂР°
    SPreficsCode:=GetPreficsToCode(Buffer.Buf[i] XOR FMASKBITS, PreficsCode );
    PB := PB + SPreficsCode;
   end;
@@ -477,7 +477,7 @@ Function THuffman.CreatePackHeader(PreficsCode:TPreficsCode;
      not Assigned(PPB.ALNFB) then Exit;
   For I:=0 to PPB.Count-1 do
    ADDPItmHeader(PPB.AB[i] , Header);
-  FreePackPreficsBuffer(PPB); // Освобождаем память
+  FreePackPreficsBuffer(PPB); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
  end;
 {--------------------------------------------}
  Var
@@ -488,7 +488,7 @@ begin
  FreePackHeader(Header);
 
  Header.Signature:=$4D48;(* = HM *)
- {-- Запись значений чисел вхождения кода --}
+ {-- Р—Р°РїРёСЃСЊ Р·РЅР°С‡РµРЅРёР№ С‡РёСЃРµР» РІС…РѕР¶РґРµРЅРёСЏ РєРѕРґР° --}
  Header.CountV:=PreficsCode.Count;
  SetLength(Header.ValueCode,Header.CountV);
  For i:=0 to Header.CountV-1 do
@@ -520,7 +520,7 @@ Result:=false;
  IOError:=IOResult;
  If IOError <> 0 then Exit;
 
- {Header.FileName:=UnPackFileName; // Записываем имя файла {}
+ {Header.FileName:=UnPackFileName; // Р—Р°РїРёСЃС‹РІР°РµРј РёРјСЏ С„Р°Р№Р»Р° {}
  Header.LNFLB:=0;
  PackAPL(Header);
 
@@ -534,7 +534,7 @@ Result:=false;
 
  BlockWrite(F , Header.CountV, 1); // CountV Uses To Value
 
- FConnectAPLCount:=False; // два счетчика для упакованного массива не соединены
+ FConnectAPLCount:=False; // РґРІР° СЃС‡РµС‚С‡РёРєР° РґР»СЏ СѓРїР°РєРѕРІР°РЅРЅРѕРіРѕ РјР°СЃСЃРёРІР° РЅРµ СЃРѕРµРґРёРЅРµРЅС‹
 
  IF (Header.CountA1 > 15) or
     (Header.CountA2 > 15) then
@@ -553,7 +553,7 @@ Result:=false;
  FTwoBCountP:=False;
  If Header.CountP > 255 then
   begin
-   FTwoBCountP:=true; // Логическое свойство определяющее размер
+   FTwoBCountP:=true; // Р›РѕРіРёС‡РµСЃРєРѕРµ СЃРІРѕР№СЃС‚РІРѕ РѕРїСЂРµРґРµР»СЏСЋС‰РµРµ СЂР°Р·РјРµСЂ
    BlockWrite(F , Header.CountP, 2);
   end else
   begin
@@ -609,8 +609,8 @@ begin
   cntbyteread + sysutils.FileRead(FFileHandle, Header.LNFLB ,1);
 
  DisTwoByte(Header.LNFLB, L , M);
- Header.LNFLB := L; // LNFLB=length not full last byte (Длинна не полного последнего байта в кол-ве битов)
- {--- Анализируем первый бит маски ---}
+ Header.LNFLB := L; // LNFLB=length not full last byte (Р”Р»РёРЅРЅР° РЅРµ РїРѕР»РЅРѕРіРѕ РїРѕСЃР»РµРґРЅРµРіРѕ Р±Р°Р№С‚Р° РІ РєРѕР»-РІРµ Р±РёС‚РѕРІ)
+ {--- РђРЅР°Р»РёР·РёСЂСѓРµРј РїРµСЂРІС‹Р№ Р±РёС‚ РјР°СЃРєРё ---}
   asm
    PUSH AX
    XOR AX,AX
@@ -618,7 +618,7 @@ begin
    MOV  AH , M
    MOV  AL , 1
    TEST AH , AL
-   JNZ @TRUE // БИТ СОВПАЛ
+   JNZ @TRUE // Р‘РРў РЎРћР’РџРђР›
     MOV CONNECTA, 0  // ConnectA:=false;
     JMP @EXIT
    @TRUE:
@@ -627,7 +627,7 @@ begin
 
    POP AX
   end;
- {--- Анализируем второй бит маски ---}
+ {--- РђРЅР°Р»РёР·РёСЂСѓРµРј РІС‚РѕСЂРѕР№ Р±РёС‚ РјР°СЃРєРё ---}
   asm
    PUSH AX
    XOR AX,AX
@@ -635,7 +635,7 @@ begin
    MOV  AH , M
    MOV  AL , 2
    TEST AH , AL
-   JNZ @TRUE // 2 БИТ СОВПАЛ
+   JNZ @TRUE // 2 Р‘РРў РЎРћР’РџРђР›
     MOV TwoBCountP , 0 // TwoBCountP:=false;
     JMP @EXIT
    @TRUE:
@@ -670,10 +670,10 @@ begin
    cntbyteread + sysutils.FileRead(FFileHandle, Header.CountP, 1);
 
 
- INC(Header.CountV,1);   // Увеличиваем на 1
- INC(Header.CountA1,1);  // Увеличиваем на 1
- INC(Header.CountA2,1);  // Увеличиваем на 1
- INC(Header.CountP,1);   // Увеличиваем на 1
+ INC(Header.CountV,1);   // РЈРІРµР»РёС‡РёРІР°РµРј РЅР° 1
+ INC(Header.CountA1,1);  // РЈРІРµР»РёС‡РёРІР°РµРј РЅР° 1
+ INC(Header.CountA2,1);  // РЈРІРµР»РёС‡РёРІР°РµРј РЅР° 1
+ INC(Header.CountP,1);   // РЈРІРµР»РёС‡РёРІР°РµРј РЅР° 1
 
  SetLength(Header.ValueCode , Header.CountV);
  SetLength(Header.APL , Header.CountA1 + Header.CountA2 );
@@ -683,7 +683,7 @@ begin
   cntbyteread + sysutils.FileRead(FFileHandle, Header.ValueCode[0],Header.CountV);{}
  cntbyteread :=
   cntbyteread + sysutils.FileRead(FFileHandle, Header.APL[0],Header.CountA1 + Header.CountA2);{} // APL = Array Prefics Length
- UnPackAPL(Header); // Распаковываем массив длинн префиксовых кодов
+ UnPackAPL(Header); // Р Р°СЃРїР°РєРѕРІС‹РІР°РµРј РјР°СЃСЃРёРІ РґР»РёРЅРЅ РїСЂРµС„РёРєСЃРѕРІС‹С… РєРѕРґРѕРІ
  cntbyteread :=
   cntbyteread + sysutils.FileRead(FFileHandle, Header.Prefics[0],Header.CountP);{}
 
@@ -692,8 +692,8 @@ begin
 //    Header.Prefics[I] := Header.Prefics[I] XOR FMASKBITS;
 //  end;
 
- Header.EndH  :=  cntbyteread;   // тек. поз. указателя
- FLNFLB       :=  Header.LNFLB; // длинна последнего не полного байта
+ Header.EndH  :=  cntbyteread;   // С‚РµРє. РїРѕР·. СѓРєР°Р·Р°С‚РµР»СЏ
+ FLNFLB       :=  Header.LNFLB; // РґР»РёРЅРЅР° РїРѕСЃР»РµРґРЅРµРіРѕ РЅРµ РїРѕР»РЅРѕРіРѕ Р±Р°Р№С‚Р°
 
 // CloseFile(F);{$I+}
 
@@ -749,18 +749,18 @@ begin
  FFileHandle := FileOpen(PChar(PackFileName), fmOpenReadWrite or fmShareDenyWrite);
  If (FFileHandle = 0) or (FFileHandle = INVALID_HANDLE_VALUE) Then
   begin
-   ProcessError(-1, 'Ошибка доступа к файлу: ' + 'THuffman.OpenPackFile', true);
-   Exit; // Обнаружены ошибки ввода - вывода
+   ProcessError(-1, 'РћС€РёР±РєР° РґРѕСЃС‚СѓРїР° Рє С„Р°Р№Р»Сѓ: ' + 'THuffman.OpenPackFile', true);
+   Exit; // РћР±РЅР°СЂСѓР¶РµРЅС‹ РѕС€РёР±РєРё РІРІРѕРґР° - РІС‹РІРѕРґР°
   end;
 
- FFileSize := windows.GetFileSize(FFileHandle, @FFileSizeHigh); // Записываем размер файла в Байтах
+ FFileSize := windows.GetFileSize(FFileHandle, @FFileSizeHigh); // Р—Р°РїРёСЃС‹РІР°РµРј СЂР°Р·РјРµСЂ С„Р°Р№Р»Р° РІ Р‘Р°Р№С‚Р°С…
  Error     := 0;
  if FFileSize = 0 then Error     := -1;
  If Error <> 0 then
   begin
-   MessageBox(FWinHandle, 'Ошибка: файл источника данных пустой!', 'Ошибка', MB_ICONERROR);
-   ProcessError(Error, ' Ошибка при работе: THuffman.OpenPackFile, ф. - windows.FileSize вернула значение 0', true);
-   Exit; // Обнаружены ошибки ввода - вывода
+   MessageBox(FWinHandle, 'РћС€РёР±РєР°: С„Р°Р№Р» РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С… РїСѓСЃС‚РѕР№!', 'РћС€РёР±РєР°', MB_ICONERROR);
+   ProcessError(Error, ' РћС€РёР±РєР° РїСЂРё СЂР°Р±РѕС‚Рµ: THuffman.OpenPackFile, С„. - windows.FileSize РІРµСЂРЅСѓР»Р° Р·РЅР°С‡РµРЅРёРµ 0', true);
+   Exit; // РћР±РЅР°СЂСѓР¶РµРЅС‹ РѕС€РёР±РєРё РІРІРѕРґР° - РІС‹РІРѕРґР°
   end;
 
  //CloseFile(FFileHandle); Error:=Ioresult;
@@ -777,19 +777,19 @@ Var
  Header      : THeader;
 begin
  OpenPackFile(PackFileName);
- IF FExecuteError then Exit; // Возникновение ошибки
+ IF FExecuteError then Exit; // Р’РѕР·РЅРёРєРЅРѕРІРµРЅРёРµ РѕС€РёР±РєРё
 
  FStop           := false;
  f_rest_bits     := '';
 
  If Assigned(FOnOpenSourceFile) then FOnOpenSourceFile;
- {--- Загрузка заголовка архива ---}
+ {--- Р—Р°РіСЂСѓР·РєР° Р·Р°РіРѕР»РѕРІРєР° Р°СЂС…РёРІР° ---}
  if LoadPackHeader(PackFileName, Header) then
-   {-- Вытаскиваем префиксные коды --}
+   {-- Р’С‹С‚Р°СЃРєРёРІР°РµРј РїСЂРµС„РёРєСЃРЅС‹Рµ РєРѕРґС‹ --}
    PreficsCodeOfH(Header, FPreficsCode) else
    if (FWinHandle <> 0) and (FWinHandle <> INVALID_HANDLE_VALUE) then
     begin
-      MessageBox(FWinHandle, 'Не могу загрузить заголовок архива !', 'Ошибка', MB_ICONERROR);
+      MessageBox(FWinHandle, 'РќРµ РјРѕРіСѓ Р·Р°РіСЂСѓР·РёС‚СЊ Р·Р°РіРѕР»РѕРІРѕРє Р°СЂС…РёРІР° !', 'РћС€РёР±РєР°', MB_ICONERROR);
       exit;
     end;
    {---------------------------------}
@@ -804,7 +804,7 @@ begin
   begin
    if not DeleteFile(PackFileName) then
     begin
-     MessageBox(WinHandle, 'Ошибка немогу удалить распакованный файл перед операцией распаковки данных', 'Ошибка', MB_ICONERROR);
+     MessageBox(WinHandle, 'РћС€РёР±РєР° РЅРµРјРѕРіСѓ СѓРґР°Р»РёС‚СЊ СЂР°СЃРїР°РєРѕРІР°РЅРЅС‹Р№ С„Р°Р№Р» РїРµСЂРµРґ РѕРїРµСЂР°С†РёРµР№ СЂР°СЃРїР°РєРѕРІРєРё РґР°РЅРЅС‹С…', 'РћС€РёР±РєР°', MB_ICONERROR);
      exit;
     end;
   end;
@@ -813,9 +813,9 @@ begin
  FRest := '';
  FileReadInBuffer(false, True, Header.EndH);
 
- FreePackHeader(Header); // Освобождаем память
+ FreePackHeader(Header); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
  If Assigned(FOnAfterUnPack) then FOnAfterUnPack;
- {--- Закрываем дескриптор файла --}
+ {--- Р—Р°РєСЂС‹РІР°РµРј РґРµСЃРєСЂРёРїС‚РѕСЂ С„Р°Р№Р»Р° --}
  if (FFileHandle <> 0) and (FFileHandle <> INVALID_HANDLE_VALUE) Then
   begin
     CloseHandle(FFileHandle);
@@ -871,8 +871,8 @@ S:='';
 Result:=S;
 end;
 
-{-- Сохранение вспомогательного массива в файл,
-    содержит упакованные данные --}
+{-- РЎРѕС…СЂР°РЅРµРЅРёРµ РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅРѕРіРѕ РјР°СЃСЃРёРІР° РІ С„Р°Р№Р»,
+    СЃРѕРґРµСЂР¶РёС‚ СѓРїР°РєРѕРІР°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ --}
 Procedure THuffman.SaveByteA(A:TAuxiliaryA;FileName:String);
   Var
    F:FIle;
@@ -897,7 +897,7 @@ Procedure THuffman.SaveByteA(A:TAuxiliaryA;FileName:String);
  end;
 
  
-(*Процедура дезархивирования буффера и сохранения его в в файл. *)
+(*РџСЂРѕС†РµРґСѓСЂР° РґРµР·Р°СЂС…РёРІРёСЂРѕРІР°РЅРёСЏ Р±СѓС„С„РµСЂР° Рё СЃРѕС…СЂР°РЅРµРЅРёСЏ РµРіРѕ РІ РІ С„Р°Р№Р». *)
 Procedure THuffman.UnPackStringBuffer(PreficsCode:TPreficsCode;
            UNPB:String; UnPackFileN:String; Var CountByte : Integer);
  Var
@@ -977,7 +977,7 @@ begin
     begin
      CFR:=8 - FLNFLB;
       If CFR <> 0 then
-       Delete(UNPB,(Length(UNPB)-CFR)+1,CFR); // Удаляем свободные разряды
+       Delete(UNPB,(Length(UNPB)-CFR)+1,CFR); // РЈРґР°Р»СЏРµРј СЃРІРѕР±РѕРґРЅС‹Рµ СЂР°Р·СЂСЏРґС‹
     end;
  {}
  UnPackStringBuffer(PreficsCode, UNPB, PackFileName, CountUnPackByte);{}
@@ -999,15 +999,15 @@ begin
  IOError:=IOResult;
  If IOError <> 0 then
   begin
-   ProcessError(IOError, 'Ошибка доступа к файлу, п. - Reset', True);
+   ProcessError(IOError, 'РћС€РёР±РєР° РґРѕСЃС‚СѓРїР° Рє С„Р°Р№Р»Сѓ, Рї. - Reset', True);
    Exit;
   end;
 
- Seek(f , FSeekFLNFLB); // Запись в пятый байт заархивированного файла
+ Seek(f , FSeekFLNFLB); // Р—Р°РїРёСЃСЊ РІ РїСЏС‚С‹Р№ Р±Р°Р№С‚ Р·Р°Р°СЂС…РёРІРёСЂРѕРІР°РЅРЅРѕРіРѕ С„Р°Р№Р»Р°
  IOError:=IOResult;
  If IOError <> 0 then
   begin
-   ProcessError(IOError, 'Ошибка при работе, п. - Seek', True);
+   ProcessError(IOError, 'РћС€РёР±РєР° РїСЂРё СЂР°Р±РѕС‚Рµ, Рї. - Seek', True);
    Exit;
   end;
   
@@ -1021,7 +1021,7 @@ begin
  IOError:=IOResult;
  If IOError <> 0 then
   Begin
-   ProcessError(IOError,'Ошибка при работе, п. - BlockWrite',True);
+   ProcessError(IOError,'РћС€РёР±РєР° РїСЂРё СЂР°Р±РѕС‚Рµ, Рї. - BlockWrite',True);
    Exit;
   end;
 
@@ -1051,7 +1051,7 @@ If Not Assigned(PPB.AB) or
  If IOError <> 0 then
   Begin
    FExecuteError := true;
-   ProcessError(IOError, 'Ошибка доступа к файлу, п. - Reset или Rewrite', True);
+   ProcessError(IOError, 'РћС€РёР±РєР° РґРѕСЃС‚СѓРїР° Рє С„Р°Р№Р»Сѓ, Рї. - Reset РёР»Рё Rewrite', True);
    Exit;
   end;
 
@@ -1059,40 +1059,40 @@ If Not Assigned(PPB.AB) or
   FCurrentFilePos:=FPackHeaderSize;
 
  If FCurrentFilePos <> 0 then
-  Seek(F, FCurrentFilePos); // Указатель в поз. FCurrentFilePos
+  Seek(F, FCurrentFilePos); // РЈРєР°Р·Р°С‚РµР»СЊ РІ РїРѕР·. FCurrentFilePos
 
  IOError:=IOResult;
  If IOError <> 0 then
   begin
-   ProcessError(IOError,'Ошибка при работе, п. - Seek', True);
+   ProcessError(IOError,'РћС€РёР±РєР° РїСЂРё СЂР°Р±РѕС‚Рµ, Рї. - Seek', True);
    Exit;
   end;
 
- If LastPartBuff then        // Если записывается последняя часть буффера
-  PCount:=PPB.Count else     // зап. общее кол-во байт иначе
-  PCount:=PPB.CountFullByte; // только кол-во полных байт
+ If LastPartBuff then        // Р•СЃР»Рё Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ РїРѕСЃР»РµРґРЅСЏСЏ С‡Р°СЃС‚СЊ Р±СѓС„С„РµСЂР°
+  PCount:=PPB.Count else     // Р·Р°Рї. РѕР±С‰РµРµ РєРѕР»-РІРѕ Р±Р°Р№С‚ РёРЅР°С‡Рµ
+  PCount:=PPB.CountFullByte; // С‚РѕР»СЊРєРѕ РєРѕР»-РІРѕ РїРѕР»РЅС‹С… Р±Р°Р№С‚
  {***
-  В этом месте можно
-  произвести подсчет одинаковых
-  подряд идущих байт. (для вторичного сжатия)
+  Р’ СЌС‚РѕРј РјРµСЃС‚Рµ РјРѕР¶РЅРѕ
+  РїСЂРѕРёР·РІРµСЃС‚Рё РїРѕРґСЃС‡РµС‚ РѕРґРёРЅР°РєРѕРІС‹С…
+  РїРѕРґСЂСЏРґ РёРґСѓС‰РёС… Р±Р°Р№С‚. (РґР»СЏ РІС‚РѕСЂРёС‡РЅРѕРіРѕ СЃР¶Р°С‚РёСЏ)
   ***}
  BlockWrite(F,PPB.AB[0],PCount);
  IOError:=IOResult;
  If IOError <> 0 then
   begin
-   ProcessError(IOError,'Ошибка при работе, п. - BlockWrite', True);
+   ProcessError(IOError,'РћС€РёР±РєР° РїСЂРё СЂР°Р±РѕС‚Рµ, Рї. - BlockWrite', True);
    Exit;
   end;
 
  FCurrentFilePos:=FilePos(F);
 
  CloseFile(F);{$I+}
- ClearIOStatus; // Очистить состояние ввода - вывода (игнорирование ошибки)
+ ClearIOStatus; // РћС‡РёСЃС‚РёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ РІРІРѕРґР° - РІС‹РІРѕРґР° (РёРіРЅРѕСЂРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
 
- If LastPartBuff then // Если записывается последняя часть буффера
+ If LastPartBuff then // Р•СЃР»Рё Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ РїРѕСЃР»РµРґРЅСЏСЏ С‡Р°СЃС‚СЊ Р±СѓС„С„РµСЂР°
   begin
-   FLNFLB:=PPB.ALNFB[PCount-1];        // Необходио записать в заголовок архива
-   SaveInHeaderLNFLB(FileName,FLNFLB); // длинну в разрядах последнего не полного байта
+   FLNFLB:=PPB.ALNFB[PCount-1];        // РќРµРѕР±С…РѕРґРёРѕ Р·Р°РїРёСЃР°С‚СЊ РІ Р·Р°РіРѕР»РѕРІРѕРє Р°СЂС…РёРІР°
+   SaveInHeaderLNFLB(FileName,FLNFLB); // РґР»РёРЅРЅСѓ РІ СЂР°Р·СЂСЏРґР°С… РїРѕСЃР»РµРґРЅРµРіРѕ РЅРµ РїРѕР»РЅРѕРіРѕ Р±Р°Р№С‚Р°
    FreePackPreficsBuffer(PPB);
    Result:=True;
    Exit;
@@ -1122,7 +1122,7 @@ Procedure THuffman.PackPreficsBuffer(PB:String;
 Procedure AddPPBItem(PByte:Byte;FullByte:Boolean;
            LNFB:Byte; Var PPB:TPackPreficsBuffer);
 Var
- FSB:Byte;   // Free Space Byte (Кол-во свободных разрядов в байте)
+ FSB:Byte;   // Free Space Byte (РљРѕР»-РІРѕ СЃРІРѕР±РѕРґРЅС‹С… СЂР°Р·СЂСЏРґРѕРІ РІ Р±Р°Р№С‚Рµ)
  SByte:Byte; // Save Byte
 begin
  If not Assigned(PPB.AB) or
@@ -1143,15 +1143,15 @@ begin
    If FullByte then
     PPB.CountFullByte:=PPB.CountFullByte+1;
    PPB.AB[PPB.Count-1]:=PByte;
-   PPB.ALNFB[PPB.Count-1]:=LNFB; // Length Not Full Byte (длинна не полного байта)
+   PPB.ALNFB[PPB.Count-1]:=LNFB; // Length Not Full Byte (РґР»РёРЅРЅР° РЅРµ РїРѕР»РЅРѕРіРѕ Р±Р°Р№С‚Р°)
   end else
- If PPB.Count-PPB.CountFullByte = 1 then // Необх. произвести "пристыковку"
+ If PPB.Count-PPB.CountFullByte = 1 then // РќРµРѕР±С…. РїСЂРѕРёР·РІРµСЃС‚Рё "РїСЂРёСЃС‚С‹РєРѕРІРєСѓ"
   begin
-   FSB:=8-PPB.ALNFB[PPB.Count-1]; //Кол-во свободных разрядов в неполном байте
+   FSB:=8-PPB.ALNFB[PPB.Count-1]; //РљРѕР»-РІРѕ СЃРІРѕР±РѕРґРЅС‹С… СЂР°Р·СЂСЏРґРѕРІ РІ РЅРµРїРѕР»РЅРѕРј Р±Р°Р№С‚Рµ
    SByte:=PPB.AB[PPB.Count-1];
    If FSB > 0 then
     begin
-     If FullByte then // Если необходимо присоединить полный байт
+     If FullByte then // Р•СЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ РїСЂРёСЃРѕРµРґРёРЅРёС‚СЊ РїРѕР»РЅС‹Р№ Р±Р°Р№С‚
       begin  
          asm // BEGIN ASM BLOCK
           PUSH AX
@@ -1161,21 +1161,21 @@ begin
           MOV CL , LNFB  // CL = LNFB = 8
           SUB CL , FSB   // CL = LNFB - FSB
           {--------------}
-          MOV AH , SBYTE // AH = Байт к которому необх. присоединить PBYTE
+          MOV AH , SBYTE // AH = Р‘Р°Р№С‚ Рє РєРѕС‚РѕСЂРѕРјСѓ РЅРµРѕР±С…. РїСЂРёСЃРѕРµРґРёРЅРёС‚СЊ PBYTE
           {--------------}
-          MOV AL , PBYTE // упаковываемый байт
-          MOV CH , CL    // CH = КОЛ-ВО  разрядов которые "не входят".
+          MOV AL , PBYTE // СѓРїР°РєРѕРІС‹РІР°РµРјС‹Р№ Р±Р°Р№С‚
+          MOV CH , CL    // CH = РљРћР›-Р’Рћ  СЂР°Р·СЂСЏРґРѕРІ РєРѕС‚РѕСЂС‹Рµ "РЅРµ РІС…РѕРґСЏС‚".
           MOV CL , LNFB
-          SUB CL , CH    // CL = Кол-во разрядов в полном байте
-          SHR AH , CL    // в AH освободить необх. кол-во разрядов
-          SHL AX , CL    // Сдвиг AX на CL разрядов
+          SUB CL , CH    // CL = РљРѕР»-РІРѕ СЂР°Р·СЂСЏРґРѕРІ РІ РїРѕР»РЅРѕРј Р±Р°Р№С‚Рµ
+          SHR AH , CL    // РІ AH РѕСЃРІРѕР±РѕРґРёС‚СЊ РЅРµРѕР±С…. РєРѕР»-РІРѕ СЂР°Р·СЂСЏРґРѕРІ
+          SHL AX , CL    // РЎРґРІРёРі AX РЅР° CL СЂР°Р·СЂСЏРґРѕРІ
           MOV SBYTE , AH
           MOV PBYTE , AL
           {-------------}
           MOV CH , CL
           MOV CL , LNFB
           SUB CL , CH
-          MOV LNFB , CL  // Изменили длинну PByte
+          MOV LNFB , CL  // РР·РјРµРЅРёР»Рё РґР»РёРЅРЅСѓ PByte
 
           POP CX
           POP AX
@@ -1192,39 +1192,39 @@ begin
        If FullByte then
         PPB.CountFullByte:=PPB.CountFullByte+1;
        PPB.AB[PPB.Count-1]    := PByte;
-       PPB.ALNFB[PPB.Count-1] := LNFB; // Length Not Full Byte (длинна не полного байта)
+       PPB.ALNFB[PPB.Count-1] := LNFB; // Length Not Full Byte (РґР»РёРЅРЅР° РЅРµ РїРѕР»РЅРѕРіРѕ Р±Р°Р№С‚Р°)
       end else
-      begin // Если необходимо присоединить не полный байт
-       If FSB - LNFB >= 0 then // Кол-во свободных разрядов в неполном байте - длинну в разрядах присоединяемого байта ("влазит" если = 0)
+      begin // Р•СЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ РїСЂРёСЃРѕРµРґРёРЅРёС‚СЊ РЅРµ РїРѕР»РЅС‹Р№ Р±Р°Р№С‚
+       If FSB - LNFB >= 0 then // РљРѕР»-РІРѕ СЃРІРѕР±РѕРґРЅС‹С… СЂР°Р·СЂСЏРґРѕРІ РІ РЅРµРїРѕР»РЅРѕРј Р±Р°Р№С‚Рµ - РґР»РёРЅРЅСѓ РІ СЂР°Р·СЂСЏРґР°С… РїСЂРёСЃРѕРµРґРёРЅСЏРµРјРѕРіРѕ Р±Р°Р№С‚Р° ("РІР»Р°Р·РёС‚" РµСЃР»Рё = 0)
         begin //
          SByte:=PPB.AB[PPB.Count-1];
          asm   // BEGIN ASM BLOCK
           PUSH AX
           PUSH CX
           {-------------}
-          MOV AH , SBYTE  // AH = Байт к которому необх. присоединить PBYTE
+          MOV AH , SBYTE  // AH = Р‘Р°Р№С‚ Рє РєРѕС‚РѕСЂРѕРјСѓ РЅРµРѕР±С…. РїСЂРёСЃРѕРµРґРёРЅРёС‚СЊ PBYTE
           {-------------}
-          MOV AL , PBYTE  // упаковываемый байт
-          MOV CL , LNFB   // длинна PBYTE
+          MOV AL , PBYTE  // СѓРїР°РєРѕРІС‹РІР°РµРјС‹Р№ Р±Р°Р№С‚
+          MOV CL , LNFB   // РґР»РёРЅРЅР° PBYTE
           MOV CH , FSB
-          SUB CH , CL     // Вычислили остаток разрядов в конце упакованного байта
-          ADD CL , CH     // Увеличиваем CL на кол-во свободных разрядов
+          SUB CH , CL     // Р’С‹С‡РёСЃР»РёР»Рё РѕСЃС‚Р°С‚РѕРє СЂР°Р·СЂСЏРґРѕРІ РІ РєРѕРЅС†Рµ СѓРїР°РєРѕРІР°РЅРЅРѕРіРѕ Р±Р°Р№С‚Р°
+          ADD CL , CH     // РЈРІРµР»РёС‡РёРІР°РµРј CL РЅР° РєРѕР»-РІРѕ СЃРІРѕР±РѕРґРЅС‹С… СЂР°Р·СЂСЏРґРѕРІ
 
-          SHR AH , CL     // в AH освободить необх. кол-во разрядов
-          SHL AX , CL     // Сдвиг AX на CL разрядов
-          {-------------} // Результат в AH
+          SHR AH , CL     // РІ AH РѕСЃРІРѕР±РѕРґРёС‚СЊ РЅРµРѕР±С…. РєРѕР»-РІРѕ СЂР°Р·СЂСЏРґРѕРІ
+          SHL AX , CL     // РЎРґРІРёРі AX РЅР° CL СЂР°Р·СЂСЏРґРѕРІ
+          {-------------} // Р РµР·СѓР»СЊС‚Р°С‚ РІ AH
           MOV SBYTE , AH
-          MOV LNFB , CH   // остаток разрядов в конце упакованного байта
+          MOV LNFB , CH   // РѕСЃС‚Р°С‚РѕРє СЂР°Р·СЂСЏРґРѕРІ РІ РєРѕРЅС†Рµ СѓРїР°РєРѕРІР°РЅРЅРѕРіРѕ Р±Р°Р№С‚Р°
           POP CX
           POP AX
          end; {} // ASM BLOCK END
          PPB.AB[PPB.Count-1]:=SByte;
          PPB.ALNFB[PPB.Count-1]:=8-LNFB;
-         If 8-PPB.ALNFB[PPB.Count-1] = 0 then  //  Кол-во разрядов в упакованном байте = 8
+         If 8-PPB.ALNFB[PPB.Count-1] = 0 then  //  РљРѕР»-РІРѕ СЂР°Р·СЂСЏРґРѕРІ РІ СѓРїР°РєРѕРІР°РЅРЅРѕРј Р±Р°Р№С‚Рµ = 8
          PPB.CountFullByte:=PPB.CountFullByte+1;
        {-------------------------------------}
         end // END to (If FSB - LNFB >= 0 then)
-         else // (Если "не влазит")
+         else // (Р•СЃР»Рё "РЅРµ РІР»Р°Р·РёС‚")
         begin
          asm // BEGIN ASM BLOCK
           PUSH AX
@@ -1232,20 +1232,20 @@ begin
           {-------------}
           MOV CH , FSB
           MOV CL , LNFB
-          SUB CL , FSB   // CL = LNFB - FSB (получаем кол-во разрядов которые "войдут")
+          SUB CL , FSB   // CL = LNFB - FSB (РїРѕР»СѓС‡Р°РµРј РєРѕР»-РІРѕ СЂР°Р·СЂСЏРґРѕРІ РєРѕС‚РѕСЂС‹Рµ "РІРѕР№РґСѓС‚")
           {--------------}
-          MOV AH , SBYTE // AH = Байт к которому необх. присоединить PBYTE
+          MOV AH , SBYTE // AH = Р‘Р°Р№С‚ Рє РєРѕС‚РѕСЂРѕРјСѓ РЅРµРѕР±С…. РїСЂРёСЃРѕРµРґРёРЅРёС‚СЊ PBYTE
           {--------------}
-          MOV AL , PBYTE // упаковываемый байт
-          MOV CH , CL    // CH = КОЛ-ВО  разрядов которые "не входят".
-          PUSH CX        // Сохранить CX
+          MOV AL , PBYTE // СѓРїР°РєРѕРІС‹РІР°РµРјС‹Р№ Р±Р°Р№С‚
+          MOV CH , CL    // CH = РљРћР›-Р’Рћ  СЂР°Р·СЂСЏРґРѕРІ РєРѕС‚РѕСЂС‹Рµ "РЅРµ РІС…РѕРґСЏС‚".
+          PUSH CX        // РЎРѕС…СЂР°РЅРёС‚СЊ CX
           MOV CL , LNFB
-          SUB CL , CH    // CL = Кол-во разрядов в полном байте
-          SHR AH , CL    // в AH освободить необх. кол-во разрядов
-          SHL AX , CL    // Сдвиг AX на CL разрядов
+          SUB CL , CH    // CL = РљРѕР»-РІРѕ СЂР°Р·СЂСЏРґРѕРІ РІ РїРѕР»РЅРѕРј Р±Р°Р№С‚Рµ
+          SHR AH , CL    // РІ AH РѕСЃРІРѕР±РѕРґРёС‚СЊ РЅРµРѕР±С…. РєРѕР»-РІРѕ СЂР°Р·СЂСЏРґРѕРІ
+          SHL AX , CL    // РЎРґРІРёРі AX РЅР° CL СЂР°Р·СЂСЏРґРѕРІ
           {-------------}
           MOV SBYTE , AH
-          POP CX         // Восстановить CX
+          POP CX         // Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ CX
           MOV LNFB  , CH
           MOV PBYTE , AL
 
@@ -1263,7 +1263,7 @@ begin
         If FullByte then
          PPB.CountFullByte:=PPB.CountFullByte+1;
         PPB.AB[PPB.Count-1]    := PByte;
-        PPB.ALNFB[PPB.Count-1] := LNFB; // Length Not Full Byte (длинна не полного байта)
+        PPB.ALNFB[PPB.Count-1] := LNFB; // Length Not Full Byte (РґР»РёРЅРЅР° РЅРµ РїРѕР»РЅРѕРіРѕ Р±Р°Р№С‚Р°)
         end; // END TO BEGIN
       end;   //END TO BEGIN
     end else // END TO (If FSB > 0 then)
@@ -1275,7 +1275,7 @@ begin
      If FullByte then
       PPB.CountFullByte:=PPB.CountFullByte+1;
      PPB.AB[PPB.Count-1]    := PByte;
-     PPB.ALNFB[PPB.Count-1] := LNFB; // Length Not Full Byte (длинна не полного байта)
+     PPB.ALNFB[PPB.Count-1] := LNFB; // Length Not Full Byte (РґР»РёРЅРЅР° РЅРµ РїРѕР»РЅРѕРіРѕ Р±Р°Р№С‚Р°)
     end;
   end;
 end;
@@ -1285,10 +1285,10 @@ Var
  BInt     : Byte;    // Pack Byte
  I        : Integer; // For Loop
  Leng     : Integer; // Length String
- OST      : Integer; // Остаток
+ OST      : Integer; // РћСЃС‚Р°С‚РѕРє
  RBofS    : Integer; // Read Byte of String
  ARBofS   : Integer; // Read Byte of String A
- SHL1     : Byte;    // Для сдвига байта в лево
+ SHL1     : Byte;    // Р”Р»СЏ СЃРґРІРёРіР° Р±Р°Р№С‚Р° РІ Р»РµРІРѕ
 begin
  Leng:=Length(Pb);
  i:=1; RBofS:=0; ARBofS:=8;
@@ -1297,7 +1297,7 @@ begin
   SPB:='';
   SPB:=Copy(Pb,i,ARBofS);
   BInt:=BinToInt(SPB);
-  // Необх. сохр. BInt
+  // РќРµРѕР±С…. СЃРѕС…СЂ. BInt
   AddPPBItem(BInt,true,ARBofS,PPB);
   i:=i+ARBofS;
   RBofS:=I-1;
@@ -1306,7 +1306,7 @@ begin
   begin
    Ost:=RBofS + ARBofS - Leng;
    ARBofS:=ARBofS - OST;
-   SHL1:=8 - ARBofS; // Количество разрядов на которые необх. сдвинуть байт в лево
+   SHL1:=8 - ARBofS; // РљРѕР»РёС‡РµСЃС‚РІРѕ СЂР°Р·СЂСЏРґРѕРІ РЅР° РєРѕС‚РѕСЂС‹Рµ РЅРµРѕР±С…. СЃРґРІРёРЅСѓС‚СЊ Р±Р°Р№С‚ РІ Р»РµРІРѕ
    SPB:=Copy(Pb,RBofS+1,ARBofS);
    BInt:=BinToInt(SPB);
     asm
@@ -1315,15 +1315,15 @@ begin
      {--------}
      XOR  AX   , AX    // AX = 0
      XOR  CX   , CX    // CX = 0
-     MOV  AH   , BInt  // СДВИГАЕМЫЙ БАЙТ
-     MOV  CL   , SHL1  // КОЛ-ВО РАЗРЯДОВ ДЛЯ СДВИГА
-     SHL  AH   , CL    // СДВИГ ВЛЕВО
+     MOV  AH   , BInt  // РЎР”Р’РР“РђР•РњР«Р™ Р‘РђР™Рў
+     MOV  CL   , SHL1  // РљРћР›-Р’Рћ Р РђР—Р РЇР”РћР’ Р”Р›РЇ РЎР”Р’РР“Рђ
+     SHL  AH   , CL    // РЎР”Р’РР“ Р’Р›Р•Р’Рћ
      MOV  BInt , AH
      {--------}
      POP CX
      POP AX
     end;
-  // Необх. сохр. BInt
+  // РќРµРѕР±С…. СЃРѕС…СЂ. BInt
   AddPPBItem(BInt,false,ARBofS,PPB);
   end;
 end;
@@ -1337,16 +1337,16 @@ Var
 begin
  If Not Assigned(CodeTable.Items) then
   begin
-   CodeTable.Count:=0;//Кол-во элементов в таблице
+   CodeTable.Count:=0;//РљРѕР»-РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ С‚Р°Р±Р»РёС†Рµ
    CodeTable.Items:=nil;
   end;
 
- SchI:=CodeTable.Count; //Счетчик индекса для массива
+ SchI:=CodeTable.Count; //РЎС‡РµС‚С‡РёРє РёРЅРґРµРєСЃР° РґР»СЏ РјР°СЃСЃРёРІР°
 
  For i:=1 to Buffer.BufSize do
   begin
    NextCode:=Buffer.Buf[i]  XOR FMASKBITS;
-   NextItem:=True; //След. записываем. эл. в таблицу
+   NextItem:=True; //РЎР»РµРґ. Р·Р°РїРёСЃС‹РІР°РµРј. СЌР». РІ С‚Р°Р±Р»РёС†Сѓ
    For j:=0 to CodeTable.Count-1 do
     begin
      If NextCode=CodeTable.Items[j].Code then
@@ -1354,7 +1354,7 @@ begin
        NextItem:=False;
        CodeTable.Items[j].Code  := NextCode;
        CodeTable.Items[j].Count := CodeTable.Items[j].Count+1;
-       Break;//Прекратить цикл
+       Break;//РџСЂРµРєСЂР°С‚РёС‚СЊ С†РёРєР»
       end;
     end;
 
@@ -1388,7 +1388,7 @@ begin
    PreficsCode.Count:=0;
   end else
   begin
-   FreePreficsCode(PreficsCode); // Освобождаем память
+   FreePreficsCode(PreficsCode); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
   end;
 
  S:='';
@@ -1407,7 +1407,7 @@ begin
 end;
 
 Procedure THuffman.SortPreficsCodeToLength(Var PreficsCode:TPreficsCode);
-// Сортировка префиксного кода по длинне
+// РЎРѕСЂС‚РёСЂРѕРІРєР° РїСЂРµС„РёРєСЃРЅРѕРіРѕ РєРѕРґР° РїРѕ РґР»РёРЅРЅРµ
   Var
    I , J : Integer;
    Leng1 : Integer;
@@ -1429,14 +1429,14 @@ Begin
          PreficsCode.A[J].LengPref := Length(Str1);
          PreficsCode.A[I].Prefics  := Str2;
          PreficsCode.A[I].LengPref := Length(Str2);
-         Break; // Прекратить внутр. цикл
+         Break; // РџСЂРµРєСЂР°С‚РёС‚СЊ РІРЅСѓС‚СЂ. С†РёРєР»
         end;
      end;
   end;
 end;
 
 Function THuffman.TestPreficsCode(PreficsCode:TPreficsCode):Boolean;
-// Проверка кода на факт его префиксности
+// РџСЂРѕРІРµСЂРєР° РєРѕРґР° РЅР° С„Р°РєС‚ РµРіРѕ РїСЂРµС„РёРєСЃРЅРѕСЃС‚Рё
  Var
   I , J   : Integer;
   Leng    : Integer;
@@ -1450,10 +1450,10 @@ Result:=True;
    Leng:=Length(Prefics);
    For I:=J + 1 To PreficsCode.Count-1 do
     begin
-     Str:=PreficsCode.A[i].Prefics; // Начало более короткого кода
-     Str:=Copy(Str,1,Leng); // не должно совпадать с началом более
-                            // длинного кода (Если это так то код префиксный)
-     If Str=Prefics then    // Иначе код не префиксный
+     Str:=PreficsCode.A[i].Prefics; // РќР°С‡Р°Р»Рѕ Р±РѕР»РµРµ РєРѕСЂРѕС‚РєРѕРіРѕ РєРѕРґР°
+     Str:=Copy(Str,1,Leng); // РЅРµ РґРѕР»Р¶РЅРѕ СЃРѕРІРїР°РґР°С‚СЊ СЃ РЅР°С‡Р°Р»РѕРј Р±РѕР»РµРµ
+                            // РґР»РёРЅРЅРѕРіРѕ РєРѕРґР° (Р•СЃР»Рё СЌС‚Рѕ С‚Р°Рє С‚Рѕ РєРѕРґ РїСЂРµС„РёРєСЃРЅС‹Р№)
+     If Str=Prefics then    // РРЅР°С‡Рµ РєРѕРґ РЅРµ РїСЂРµС„РёРєСЃРЅС‹Р№
       begin
        //
        Result:=False;
@@ -1540,11 +1540,11 @@ begin
  Init(TreeTable);
  For i:=CSCH-1 downto 0 do
    begin
-     //Только если первая Строка
-     TreeTable.Items[I,J].Value:=CodeTable.Items[i].Count; // Кол-во вхождений
-     TreeTable.Items[I,J].Code:=CodeTable.Items[i].Code; // Код вхождения
+     //РўРѕР»СЊРєРѕ РµСЃР»Рё РїРµСЂРІР°СЏ РЎС‚СЂРѕРєР°
+     TreeTable.Items[I,J].Value:=CodeTable.Items[i].Count; // РљРѕР»-РІРѕ РІС…РѕР¶РґРµРЅРёР№
+     TreeTable.Items[I,J].Code:=CodeTable.Items[i].Code; // РљРѕРґ РІС…РѕР¶РґРµРЅРёСЏ
    end;
- SortedRow(J,TreeTable);//Сортируем первую строку
+ SortedRow(J,TreeTable);//РЎРѕСЂС‚РёСЂСѓРµРј РїРµСЂРІСѓСЋ СЃС‚СЂРѕРєСѓ
 
  Repeat
   If (J<>0) and
@@ -1562,7 +1562,7 @@ begin
    Break;
 
   Sum:=Min1+Min2;
-  {---Перекидываем все элементы кроме тех у которых индекс = MP1, MP2 --}
+  {---РџРµСЂРµРєРёРґС‹РІР°РµРј РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РєСЂРѕРјРµ С‚РµС… Сѓ РєРѕС‚РѕСЂС‹С… РёРЅРґРµРєСЃ = MP1, MP2 --}
   For i:=0 to TreeTable.ColCount-1 do
    begin
    TreeTable.Items[i,j].Right:=False;
@@ -1600,7 +1600,7 @@ begin
 end;
 
 Function THuffman.GetAllusionsToItIndex(TreeTable : TTreeTable;
- Var CheckAItm : TCheckAItm) : Boolean;  // Взять ссылки для всех элементов
+ Var CheckAItm : TCheckAItm) : Boolean;  // Р’Р·СЏС‚СЊ СЃСЃС‹Р»РєРё РґР»СЏ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ
 {-------------------------------------------}
  Function Stop(CheckAItm : TCheckAItm) : Boolean;
   Var
@@ -1701,14 +1701,14 @@ Function THuffman.GetAllusionsToItIndex(TreeTable : TTreeTable;
       begin
        Sch:=Sch+1;
        AddCheckItm(CheckAItm,I,Row,-1,-1,False);
-       If Sch=2 then Break; // Прекратить цикл
+       If Sch=2 then Break; // РџСЂРµРєСЂР°С‚РёС‚СЊ С†РёРєР»
       end;
     end;
   end;
 {-------------------------------------------}
 Var
- SI1        :Integer; // Ссылка на элемент 1
- SI2        :Integer; // Ссылка на элемент 2
+ SI1        :Integer; // РЎСЃС‹Р»РєР° РЅР° СЌР»РµРјРµРЅС‚ 1
+ SI2        :Integer; // РЎСЃС‹Р»РєР° РЅР° СЌР»РµРјРµРЅС‚ 2
  A1         :Integer;
  ACol,ARow  :Integer;
  SaveRow    :Integer;
@@ -1731,7 +1731,7 @@ Row := 0;
 Repeat
 
  If GetCheckItm(CheckAItm,ACol,Arow) then
-   begin // Берем строку и колонку не проверенного элемента
+   begin // Р‘РµСЂРµРј СЃС‚СЂРѕРєСѓ Рё РєРѕР»РѕРЅРєСѓ РЅРµ РїСЂРѕРІРµСЂРµРЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
     A1:=ACol;
     Row:=ARow;
    end;
@@ -1743,13 +1743,13 @@ Repeat
     Row:=Row-1;
     If TreeTable.Items[SI1,Row].Value <> 0 then
      begin
-      //Сохраняем не проверенный узел  (SI1 , Row)
+      //РЎРѕС…СЂР°РЅСЏРµРј РЅРµ РїСЂРѕРІРµСЂРµРЅРЅС‹Р№ СѓР·РµР»  (SI1 , Row)
       AddCheckItm(CheckAItm,SI1,Row,A1,SaveRow,false);
      end;
     Row:=Row+1;
    end else
    begin
-    // Сохраняем точку остановки цепочки ссылок
+    // РЎРѕС…СЂР°РЅСЏРµРј С‚РѕС‡РєСѓ РѕСЃС‚Р°РЅРѕРІРєРё С†РµРїРѕС‡РєРё СЃСЃС‹Р»РѕРє
     SaveStopPoint(CheckAItm,A1,Row);
    end;
 
@@ -1760,13 +1760,13 @@ Repeat
     Row:=Row-1;
     If TreeTable.Items[SI2,Row].Value <> 0 then
       begin
-      //Сохраняем не проверенный узел  (SI1 , Row)
+      //РЎРѕС…СЂР°РЅСЏРµРј РЅРµ РїСЂРѕРІРµСЂРµРЅРЅС‹Р№ СѓР·РµР»  (SI1 , Row)
        AddCheckItm(CheckAItm,SI2,Row,A1,SaveRow,false);
       end;
     Row:=Row+1;
    end else
    begin
-    // Сохраняем точку остановки цепочки ссылок
+    // РЎРѕС…СЂР°РЅСЏРµРј С‚РѕС‡РєСѓ РѕСЃС‚Р°РЅРѕРІРєРё С†РµРїРѕС‡РєРё СЃСЃС‹Р»РѕРє
     SaveStopPoint(CheckAItm,A1,Row);
    end;
 
@@ -1784,7 +1784,7 @@ end;
 
 Constructor THuffman.Create(AOwner:TComponent);
 begin
-// Начальная инициализация переменных
+// РќР°С‡Р°Р»СЊРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїРµСЂРµРјРµРЅРЅС‹С…
 FLNFLB          := 0;
 FSeekFLNFLB     := 3 - 1;
 FPackHeaderSize := 0;
@@ -1792,18 +1792,18 @@ FWinHandle      := 0;
 FMASKBITS       := $AA;
 FExecuteError   := false;
 FStop           := false;
-// Присоединяем процедуры для внутренних событий
-OnReadInBuffer       := PEventReadInBuffer;       // чтение в буфер из файла
-OnBeforeReadInBuffer := PEventBeforeReadInBuffer; // для защищенных событий
+// РџСЂРёСЃРѕРµРґРёРЅСЏРµРј РїСЂРѕС†РµРґСѓСЂС‹ РґР»СЏ РІРЅСѓС‚СЂРµРЅРЅРёС… СЃРѕР±С‹С‚РёР№
+OnReadInBuffer       := PEventReadInBuffer;       // С‡С‚РµРЅРёРµ РІ Р±СѓС„РµСЂ РёР· С„Р°Р№Р»Р°
+OnBeforeReadInBuffer := PEventBeforeReadInBuffer; // РґР»СЏ Р·Р°С‰РёС‰РµРЅРЅС‹С… СЃРѕР±С‹С‚РёР№
 //
 Inherited Create(AOwner);
 end;
 
 Destructor THuffman.Destroy;
 begin
- FreePackPreficsBuffer(FPPB);    // Освобождаем память
- FreeCodeTable(FCodeTable);      // Освобождаем память
- FreePreficsCode(FPreficsCode);  // Освобождаем память
+ FreePackPreficsBuffer(FPPB);    // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+ FreeCodeTable(FCodeTable);      // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+ FreePreficsCode(FPreficsCode);  // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
  
  Inherited Destroy;
 end;
